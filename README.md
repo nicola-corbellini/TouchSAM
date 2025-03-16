@@ -48,6 +48,6 @@ The FastSAM TouchDesigner Plugin is a .tox component that integrates real-time s
 ## Examples
 
 ## Roadmap
-[] Implement prompting modalities (i.e., points, boxes and text)
-[] Add support for other models (e.g., MobileSAM, SAM2)
-[] Add support for [TopArray](https://github.com/IntentDev/TopArray) interface to improve performance
+- [] Implement prompting modalities (i.e., points, boxes and text)
+- [] Add support for other models (e.g., MobileSAM, SAM2)
+- [] Add support for [TopArray](https://github.com/IntentDev/TopArray) interface to improve performance
