@@ -7,7 +7,9 @@ echo Creating .venv directory...
 echo Activating virtual environment...
 call .touchsam\Scripts\activate
 echo Installing dependencies
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 ultralytics
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install ultralytics
+pip install numpy<2
 echo Installation complete.
 
 pause
