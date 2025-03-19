@@ -23,7 +23,7 @@ The FastSAM TouchDesigner Plugin is a .tox component that integrates real-time s
 2. Run `setup.bat`.
 > [!NOTE]
 > You can skip points 1. and 2. if you followed the `manual setup` steps.
-3. **Download** the `.tox` file from the [GitHub Releases](https://github.com/nicola-corbellini/TouchSAM/releases/tag/v0.0.1-alpha).
+3. **Download** the `.tox` file from the [GitHub Releases](https://github.com/nicola-corbellini/TouchSAM/releases).
 4. **Drag & Drop** the `.tox` file into your TouchDesigner project.
 5. **Save and Restart** TouchDesigner project.
 6. **Load the model** (the first time it will download it automatically in the plugin folder).
