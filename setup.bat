@@ -1,6 +1,6 @@
 @echo off
 
-set PYTHON_PATH=
+set PYTHON_PATH=""
 
 echo Creating .venv directory...
 %PYTHON_PATH% -m venv ".touchsam"
