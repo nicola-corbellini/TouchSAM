@@ -12,7 +12,7 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 echo Installing Ultralytics
 pip install ultralytics==8.3.93
 echo Downgrading numpy
-pip install numpy<2
+pip install numpy==1.26.4
 echo Installation complete.
 
 pause
