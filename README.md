@@ -10,7 +10,7 @@ The FastSAM TouchDesigner Plugin is a .tox component that integrates real-time s
 1. **Download** the `.Source code (zip)` file from the [GitHub Releases](https://github.com/nicola-corbellini/TouchSAM/releases).
 2. Open `setup.bat` with text editor and set path to Python 3.11 in `set PYTHON_PATH=` (ex. `set PYTHON_PATH="C:\Program Files\Python311\python.exe"`).
 > [!NOTE]
-> On Windows, you can type `where python` to get the path.
+> On Windows, you can type `python -c "import sys; print(sys.executable)"` to get the path.
 > Write the path enclosed between `""`.
 3. Run `setup.bat`.
 4. **Drag & Drop** the `.tox` file into your TouchDesigner project.
