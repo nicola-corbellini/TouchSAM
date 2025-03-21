@@ -2,33 +2,20 @@
 ## 🎨 Overview
 The FastSAM TouchDesigner Plugin is a .tox component that integrates real-time segmentation into TouchDesigner using the [FastSAM model](https://docs.ultralytics.com/models/fast-sam/).
 
-## Requirements (manual setup)
-> [!WARNING]
-> This is for advanced users only as it requires installing CUDA and the Python virtual environment from scratch.
-
-<details>
-  <summary>Manual setup</summary>
-
+## Requirements
   1. Install Python [3.11.1](https://www.python.org/downloads/release/python-3111/)
-  2. Install [CUDA Toolkit](https://developer.nvidia.com/cuda-11-8-0-download-archive) 11.8
-  3. Install the required packages
-  ```bash
-  pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 ultralytics
-  ```
-  4. Proceed with the `Installation` steps
-</details>
+  2. Install [CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
 
 ## 🚀 Installation
-1. Open `setup.bat` with text editor and set path to Python 3.11 in `set PYTHON_PATH=` (ex. `set PYTHON_PATH="C:\Program Files\Python311\python.exe"`).
+1. **Download** the `.Source code (zip)` file from the [GitHub Releases](https://github.com/nicola-corbellini/TouchSAM/releases).
+2. Open `setup.bat` with text editor and set path to Python 3.11 in `set PYTHON_PATH=` (ex. `set PYTHON_PATH="C:\Program Files\Python311\python.exe"`).
 > [!NOTE]
-> The path should be enclosed between `""`.
+> On Windows, you can type `where python` to get the path.
+> Write the path enclosed between `""`.
 3. Run `setup.bat`.
-> [!NOTE]
-> You can skip points 1. and 2. if you followed the `manual setup` steps.
-3. **Download** the `.tox` file from the [GitHub Releases](https://github.com/nicola-corbellini/TouchSAM/releases).
 4. **Drag & Drop** the `.tox` file into your TouchDesigner project.
 5. **Save and Restart** TouchDesigner project.
-6. **Load the model** (the first time it will download it automatically in the plugin folder).
+6. **Load the model** (the first time it will download it automatically in the same folder of the `.tox` file).
 
 ## Inputs & Outputs
 
@@ -56,7 +43,7 @@ To perform the segmentation on a image/video, it is enough to press `Load Model`
 <img src="assets/image.png" width="366" height="518"/>
 </p>
 
-- **Venvpath**: path pointing to the Python virtual environment with pre-installed packages (this is set automatically to the project folder if not changed)
+- **TouchSAM Folder**: this should be left empty if the `.toe` is inside the same folder of the virtual env. created with the `setup.bat` script
 - **Model**: version of the FastSAM model
 - **Load Model**: load model into memory
 - **Device**: device used for inference (GPU recommended for real-time performance on videos)
