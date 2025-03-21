@@ -3,9 +3,10 @@ import TDFunctions as TDF
 
 from enum import Enum
 from datetime import datetime
+import webbrowser
 import random
-import numpy as np
 import cv2
+import numpy as np
 
 # Set a fixed seed for reproducibility
 random.seed(42)
@@ -527,6 +528,26 @@ class TouchSamExt:
         # Call the appropriate handler if it exists
         if param_name in param_handlers:
             param_handlers[param_name](param_value)
+
+    def par_exec_onPulse(self, par):
+        param_name = par.name
+
+        # Use the URL map directly to call the appropriate method or action
+        action_map = {
+            "Loadmodel": ext.TouchSamExt.load_model,
+            "Reinit": lambda: None
+        }
+
+        # Call the action directly if it exists in the map
+        action_map.get(param_name, lambda: self.about(param_name))()
+
+    @staticmethod
+    def about(endpoint):
+        url_map = {
+            "Github": "https://github.com/nicola-corbellini",
+            "Instagram": "https://www.instagram.com/liminal_kin?igsh=MTZpcDRjOTAydGx0dw=="
+        }     
+        webbrowser.open(url_map[endpoint], new=2)
 
     @staticmethod
     def fifolog(status, message):
