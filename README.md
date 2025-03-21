@@ -60,8 +60,8 @@ To perform the segmentation on a image/video, it is enough to press `Load Model`
 - [ ] Add support for [TopArray](https://github.com/IntentDev/TopArray) interface to improve performance
 
 ## 🤝 Contributing
-Contributions are welcome!🫶 
-If you find this project useful, consider:
-⭐ Starring the repository!
-🚀 Sharing it with the TouchDesigner community!
+Contributions are welcome!🫶  
+If you find this project useful, consider:  
+⭐ Starring the repository!  
+🚀 Sharing it with the TouchDesigner community!  
 💡 Suggesting improvements or reporting issues.
