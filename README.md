@@ -2,7 +2,7 @@
 ## 🎨 Overview
 The FastSAM TouchDesigner Plugin is a .tox component that integrates real-time segmentation into TouchDesigner using the [FastSAM model](https://docs.ultralytics.com/models/fast-sam/).
 
-## Requirements
+## 📌 Requirements
   1. Install Python [3.11.1](https://www.python.org/downloads/release/python-3111/)
   2. Install [CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
 
@@ -17,11 +17,11 @@ The FastSAM TouchDesigner Plugin is a .tox component that integrates real-time s
 5. **Save and Restart** TouchDesigner project.
 6. **Load the model** (the first time it will download it automatically in the same folder of the `.tox` file).
 
-## Inputs & Outputs
+## 🔄 Inputs & Outputs
 
-### Inputs:
+### 📥 Inputs:
 - Image or video (TOP): input image or video to segment (e.g. from a `Movie File In TOP`)
-### Outputs:
+### 📤 Outputs:
 - Segmented image (TOP): processed image with segmentation masks applied.
 - Mask image (TOP): black and white specified mask.
 - Result table (DAT): comprehensive table with resulting segmentation masks' properties. E.g.:
@@ -34,11 +34,11 @@ The FastSAM TouchDesigner Plugin is a .tox component that integrates real-time s
 
 - Logs table (DAT): table with Python logs storing errors and messages from the Python console.
 
-## Usage
+## 🛠 Usage
 To perform the segmentation on a image/video, it is enough to press `Load Model` and inference starts.
 > [!NOTE]
 > TouchDesigner may freeze for a moment, while loading the model.
-### Parameters
+### ⚙️ Parameters
 <p align="center">
 <img src="assets/image.png" width="366" height="518"/>
 </p>
@@ -54,7 +54,14 @@ To perform the segmentation on a image/video, it is enough to press `Load Model`
 - **Re-Init**: reload the Python extension.
 - **Clear Log**: clear the log DAT.
 
-## Roadmap
+## 🛣 Roadmap
 - [ ] Implement prompting modalities (i.e., points, boxes and text)
 - [ ] Add support for other models (e.g., MobileSAM, SAM2)
 - [ ] Add support for [TopArray](https://github.com/IntentDev/TopArray) interface to improve performance
+
+## 🤝 Contributing
+Contributions are welcome!🫶 
+If you find this project useful, consider:
+⭐ Starring the repository!
+🚀 Sharing it with the TouchDesigner community!
+💡 Suggesting improvements or reporting issues.
