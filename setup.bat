@@ -1,5 +1,6 @@
 @echo off
 set PYTHON_PATH=""
+:: e.g., use python -c "import sys; print(sys.executable)"
 
 :: Define ANSI Escape Sequences for Colors
 set "RED=[91m"
