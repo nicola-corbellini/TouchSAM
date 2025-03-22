@@ -545,7 +545,8 @@ class TouchSamExt:
     def about(endpoint):
         url_map = {
             "Github": "https://github.com/nicola-corbellini",
-            "Instagram": "https://www.instagram.com/liminal_kin?igsh=MTZpcDRjOTAydGx0dw=="
+            "Instagram": "https://www.instagram.com/liminal_kin?igsh=MTZpcDRjOTAydGx0dw==",
+            "Linkedin": "https://www.linkedin.com/in/nicola-corbellini-00780b1a9/"
         }     
         webbrowser.open(url_map[endpoint], new=2)
 
