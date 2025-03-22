@@ -18,8 +18,8 @@ The FastSAM TouchDesigner Plugin is a .tox component that integrates real-time s
 6. **Load the model** (the first time it will download it automatically in the same folder of the `.tox` file).
 
 ### Installation Example
-
-<video controls src="assets/installation_tutorial.mp4" title="Title"></video>
+*Click on the image to watch the video*
+[![Tutorial](assets/thumbnail.png)](https://vimeo.com/1068458589?share=copy)
 
 ## 🔄 Inputs & Outputs
 
