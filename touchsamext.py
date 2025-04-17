@@ -13,6 +13,8 @@ random.seed(42)
 
 try:
     import torch
+    import torch.nn.functional as F
+    import torchvision.transforms as transforms
     from ultralytics import FastSAM
 except Exception as e:
     import traceback
@@ -27,6 +29,47 @@ class SegmentationMode(Enum):
     ANYTHING = 0
     POINTS = 1
     TEXT = 2
+
+
+class TopCUDAInterface:
+	def __init__(self, width, height, num_comps, dtype):
+		self.mem_shape = CUDAMemoryShape()
+		self.mem_shape.width = width
+		self.mem_shape.height = height
+		self.mem_shape.numComps = num_comps
+		self.mem_shape.dataType = dtype
+		self.bytes_per_comp = np.dtype(dtype).itemsize
+		self.size = width * height * num_comps * self.bytes_per_comp
+
+class TopArrayInterface:
+	def __init__(self, top, stream=0):
+		self.top = top
+		mem = top.cudaMemory(stream=stream)
+		self.w, self.h = mem.shape.width, mem.shape.height
+		self.num_comps = mem.shape.numComps
+		self.dtype = mem.shape.dataType
+		shape = (mem.shape.numComps, self.h, self.w)
+		dtype_info = {'descr': [('', '<f4')], 'num_bytes': 4}
+		dtype_descr = dtype_info['descr']
+		num_bytes = dtype_info['num_bytes']
+		num_bytes_px = num_bytes * mem.shape.numComps
+		
+		self.__cuda_array_interface__ = {
+			"version": 3,
+			"shape": shape,
+			"typestr": dtype_descr[0][1],
+			"descr": dtype_descr,
+			"stream": stream,
+			"strides": (num_bytes, num_bytes_px * self.w, num_bytes_px),
+			"data": (mem.ptr, False),
+		}
+
+	def update(self, stream=0):
+
+		mem = self.top.cudaMemory(stream=stream)
+		self.__cuda_array_interface__['stream'] = stream
+		self.__cuda_array_interface__['data'] = (mem.ptr, False)
+		return
 
 
 class FastSAMResultsManager:
@@ -240,6 +283,9 @@ class TouchSamExt:
         ], dtype=np.uint8)
         
         self.input_image = op('input_image')
+        self.to_tensor = TopArrayInterface(self.input_image)
+        self.stream = torch.cuda.current_stream(device=self.device)
+        self.normalize = transforms.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
         self.model = None
         
         # For tracking masks across frames
@@ -252,7 +298,7 @@ class TouchSamExt:
     def load_model(self):
         try:
             # Create a FastSAM model
-            self.model = FastSAM(f"{self.model_name}.pt")
+            self.model = FastSAM(f"{self.model_name}.engine")
             device = "GPU" if self.device == "cuda:0" else "CPU"
             message = f"Successfully loaded {self.model_name} on {device}"
             print(message)
@@ -398,6 +444,25 @@ class TouchSamExt:
         try:
             # Get the input image
             input_image = self.input_image.numpyArray(delayed=False)
+            self.trt_input = torch.as_tensor(self.to_tensor, device=self.device)
+            #self.trt_input = self.normalize(self.trt_input[1:, :, :])
+            self.trt_input = self.trt_input[[2, 1, 0], :, :]
+            print(self.trt_input.shape)
+            print(self.trt_input[1, 360, :].cpu().numpy().tolist())
+            #self.trt_input = self.trt_input.permute(1, 2, 0)
+            self.trt_input = F.interpolate(self.trt_input.unsqueeze(0), size=(self.image_size, self.image_size), mode='bilinear', align_corners=False)
+            
+            # 4. Normalize the image (apply mean and std normalization)
+            # self.trt_input = self.normalize(self.trt_input[1:, :, :] / 255)
+            # Convert from BGRA to RGB by selecting channels in R, G, B order
+            # rgb = self.trt_input[[2, 1, 0], :, :]  # shape: [3, H, W]
+
+            # # Optionally normalize if values are in [0, 255]
+            # if rgb.max() > 1.0:
+            #     rgb = rgb.float() / 255.0
+            # print(rgb)
+            self.trt_input = self.trt_input.int()
+            
             
             if input_image is None or input_image.size == 0:
                 print("Error: Input image is None or empty")
@@ -418,15 +483,15 @@ class TouchSamExt:
             processing_image = rgb_image
             
             # Skip resizing if not needed
-            if self.image_size > 0:
+            if processing_image.shape[0] != self.image_size or processing_image.shape[1] != self.image_size:
                 # Calculate dimensions while preserving aspect ratio
-                scale_factor = min(self.image_size / original_width, self.image_size / original_height)
-                new_width = int(original_width * scale_factor)
-                new_height = int(original_height * scale_factor)
+                # scale_factor = min(self.image_size / original_width, self.image_size / original_height)
+                # new_width = int(original_width * scale_factor)
+                # new_height = int(original_height * scale_factor)
                 
                 # Only resize if necessary
-                if new_width != original_width or new_height != original_height:
-                    processing_image = cv2.resize(rgb_image, (new_width, new_height), 
+                # if new_width != original_width or new_height != original_height:
+                processing_image = cv2.resize(rgb_image, (self.image_size, self.image_size), 
                                                  interpolation=cv2.INTER_LINEAR)
                 
             # Ensure processing image is in the correct format
@@ -437,12 +502,12 @@ class TouchSamExt:
             if self.model is not None:
                 #with torch.no_grad():  # Disable gradient computation for inference
                 # Run the model
-                results = self.model.track(
-                    source=processing_image,
+                results = self.model(
+                    source=self.trt_input,
                     texts=self.prompt,
                     points=self.points,
                     device=self.device,
-                    imgsz=max(processing_image.shape[1], processing_image.shape[0]),
+                    imgsz=self.image_size,
                     conf=self.confidence,
                     iou=self.iou,
                     retina_masks=False,
@@ -534,7 +599,7 @@ class TouchSamExt:
 
         # Use the URL map directly to call the appropriate method or action
         action_map = {
-            "Loadmodel": ext.TouchSamExt.load_model,
+            "Loadmodel": self.load_model,
             "Reinit": lambda: None
         }
 
